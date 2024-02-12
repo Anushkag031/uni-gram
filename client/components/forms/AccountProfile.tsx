@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input"
 import { z } from "zod"
 import Image from "next/image";
 import { Textarea } from "../ui/textarea";
+import { isBase64Image } from "@/lib/utils";
+import { useUploadThing } from "@/lib/uploadthing";
 
  
 //defining props using interface
@@ -44,6 +46,7 @@ interface Props{
 const  AccountProfile = ({user,btnTitle} : Props ) => {
 
     const[files,setFiles] = useState<File[]>([])
+    const { startUpload} = useUploadThing("media");
 
 
 
@@ -88,10 +91,23 @@ const  AccountProfile = ({user,btnTitle} : Props ) => {
 
     }
 
-    function onSubmit(values: z.infer<typeof UserValidation>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+       
+        const blob = values.profile_photo;  //react hook form
+
+
+        const hasImageChanged = isBase64Image(blob);
+
+        if(hasImageChanged)
+        {
+            const imgRes= await startUpload(files);
+
+
+            if(imgRes && imgRes[0].url) {
+                values.profile_photo = imgRes[0].url;
+            }
+        }
+        //update user profile
       }
 
 
