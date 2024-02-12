@@ -129,7 +129,7 @@ const  AccountProfile = ({user,btnTitle} : Props ) => {
                     src={field.value}
                     alt="profile photo"
                     width={96}
-                    height={96}
+                    height={50}
                     priority
                     className="rounded-full object-contain"
                     />
