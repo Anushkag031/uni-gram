@@ -113,7 +113,7 @@ const  AccountProfile = ({user,btnTitle} : Props ) => {
 
 
     return (
-        //frpm shadcn- copied form component
+        //from shadcn- copied form component
         <Form {...form}>
       <form 
       onSubmit={form.handleSubmit(onSubmit)} 
