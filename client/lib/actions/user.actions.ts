@@ -59,4 +59,20 @@ export async function updateUser({
 
     }
 }
-//backend done here
+//backend done here for updating the user
+
+export async function fetchUser(userId : string){
+    try {
+        connectToDB();
+
+        return await User
+        .findOne({ id: userId })
+        /*.populate({
+            path:'communities',
+            model: Cummunity
+        })*/
+    } catch (error : any) {
+        throw new Error(`Failed to fetch user: ${error.message}`)  ;
+        
+    }
+}
