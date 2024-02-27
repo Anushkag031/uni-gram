@@ -1,5 +1,5 @@
 import Link from "next/link";
-//import "../globals.css";
+
 import Image from "next/image";
 import { OrganizationSwitcher, SignOutButton, SignedIn } from "@clerk/nextjs";
 import { dark } from '@clerk/themes'

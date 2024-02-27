@@ -10,7 +10,12 @@ const nextConfig = {
       ignoreDuringBuilds: true,
     },
     images: {
+      //domains: ['utfs.io'],
       remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "utfs.io",
+        },
         {
           protocol: "https",
           hostname: "img.clerk.com",

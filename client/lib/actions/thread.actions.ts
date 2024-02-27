@@ -42,3 +42,45 @@ export async function createThread({
     }
         
 }
+
+export async function fetchPosts(pageNumber =1, pageSize =20)
+{
+    try {
+        // Ensure database connection
+        connectToDB();
+
+        const skipAmount = (pageNumber - 1) * pageSize;
+
+        // Fetch posts query
+        const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
+            .sort({ createdAt: 'desc' })
+            .skip(skipAmount)
+            .limit(pageSize)
+            .populate({ path: 'author', model: User })
+            .populate({
+                path: 'children',
+                populate: {
+                    path: 'author',
+                    model: User,
+                    select: "_id name parentId image "
+                }
+            });
+
+        // Execute posts query
+        const posts = await postsQuery.exec();
+
+        // Total post count
+        const totalPostCount = await Thread.countDocuments({ parentId: { $in: [null, undefined] } });
+
+        // Determine if there are more posts
+        const isNext = totalPostCount > skipAmount + posts.length;
+
+        // Return posts and pagination info
+        return { posts, isNext };
+    } catch (error) {
+        // Handle any errors
+        console.error('Error fetching posts:', error);
+        throw error; // Re-throw the error to propagate it
+    }
+    
+}
