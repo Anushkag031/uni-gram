@@ -1,5 +1,8 @@
+
 import Image from "next/image"
 import Link from "next/link"
+//import { useState } from "react"
+
 
 interface Props {
     id: string,
@@ -39,8 +42,22 @@ const ThreadCard = ({
     community,
     createdAt,
     comments,
+    isComment,
 
 }: Props) => {
+   /* const [isLiked, setIsLiked] = useState(false);
+    // State to track the number of likes
+    const [likeCount, setLikeCount] = useState(0);
+
+    // Function to handle the like action
+    const handleLike = () => {
+        // Perform the like action (e.g., update the like count in the database)
+        // Update the local state accordingly
+        setIsLiked(!isLiked);
+        setLikeCount(prevCount => isLiked ? prevCount - 1 : prevCount + 1);
+    }; */
+    
+
     return (
         <article className="flex w-full flex-col rounded-xl bg-dark-2 p-7">
             <div className="flex items-start justify-between">
@@ -67,10 +84,12 @@ const ThreadCard = ({
                             <div className="flex gap-3.5">
                                 <Image
                                     src="/assets/heart-gray.svg"
+                                    //src={isLiked ? "/assets/heart-red.svg" : "/assets/heart-gray.svg"}
                                     alt="heart"
                                     width={24}
                                     height={24}
                                     className="cursor-pointer object-contain"
+                                   // onClick={handleLike}
                                 />
                                 <Link href={`/thread/${id}`}>
                                     <Image
@@ -97,6 +116,11 @@ const ThreadCard = ({
                                 />
 
                             </div>
+                            {isComment && comments.length > 0 && (
+                                <Link href={`/thread/${id}`}>
+                                    <p className="mt-1 text-subtle-medium text-gray-1">{comments.length} replies</p>
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>
