@@ -22,7 +22,7 @@ export async function createThread({
     try {
         connectToDB();
 
-    
+
         const createThread = await Thread.create({
             text,
             author,
@@ -31,20 +31,19 @@ export async function createThread({
 
         //update user model after creating thread
 
-        await  User.findByIdAndUpdate(author, {
+        await User.findByIdAndUpdate(author, {
             $push: { threads: createThread._id }
         });
 
         revalidatePath(path);
-    } catch (error : any) {
+    } catch (error: any) {
         console.error('Error occurred while creating thread:', error);
-        
+
     }
-        
+
 }
 
-export async function fetchPosts(pageNumber =1, pageSize =20)
-{
+export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     try {
         // Ensure database connection
         connectToDB();
@@ -82,5 +81,43 @@ export async function fetchPosts(pageNumber =1, pageSize =20)
         console.error('Error fetching posts:', error);
         throw error; // Re-throw the error to propagate it
     }
-    
+
+}
+
+export async function fetchThreadById(id: string) {
+    connectToDB();
+
+    try {
+        //todo populate community
+        const thread = await Thread.findById(id)
+            .populate({
+                path: 'author',
+                model: User,
+                select: "_id id name image"
+            })
+            .populate({
+                path: 'children',
+                populate: [ //goes recursively 
+                    {
+                        path: 'author',
+                        model: User,
+                        select: "_id id name parentId image"
+                    },
+                    {//multilevel comment 
+                        path: 'children',
+                        model: Thread,
+                        populate: {
+                            path: 'author',
+                            model: User,
+                            select: "_id id name parentId image"
+                        }
+                    }
+                ]
+            }).exec();
+
+            return thread;
+    } catch (error) {
+        console.error('Error fetching thread by id:', error);
+        throw error;
+    }
 }
