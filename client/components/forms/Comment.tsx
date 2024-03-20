@@ -70,7 +70,7 @@ const Comment = ({threadId, currentUserImg, currentUserId}: Props) => {
                     control={form.control}
                     name="thread"
                     render={({ field }) => (
-                        <FormItem className="flex items-center gap-3 w-full ">
+                        <FormItem className="flex items-center gap-4 w-full ">
                             <FormLabel>
                                
                                <Image
@@ -78,7 +78,7 @@ const Comment = ({threadId, currentUserImg, currentUserId}: Props) => {
                                alt="profile image"
                                width={48}
                                height={48}
-                               className="rounded-full object-cover"
+                               className="rounded-full object-cover height-50 "
                                />
                             </FormLabel>
                             <FormControl className="border-none bg-transparent" >
