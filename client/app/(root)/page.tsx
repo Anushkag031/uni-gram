@@ -24,13 +24,14 @@ export default async function Home() {
               <ThreadCard 
               key={post._id}
               id={post._id}
-              currentUserId={user?.id || " "} //coming from clerk
+              currentUserId={user?.id || ""} //coming from clerk
               parentId={post.parentId}
               content={post.text}
               author={post.author}
               community={post.community}
               createdAt={post.createdAt}
               comments={post.children}
+              isComment={false}
               />
             ))}
           </>
