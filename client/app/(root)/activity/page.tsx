@@ -1,6 +1,21 @@
 
+import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
+import { currentUser } from "@clerk/nextjs";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 
-const Page = async () => {
+
+async function Page() {
+
+    const user= await currentUser();
+
+    if(!user) return null;
+
+    //if have user, redirect to multiple user accounts i.e user
+    const userInfo = await fetchUser(user.id);
+
+    if(!userInfo?.onboarded) redirect('/onboarding');
+
     return (
       <section>
           <h1 className="head-text mb-10">Activity</h1>
