@@ -168,3 +168,53 @@ export async function fetchUsers({
         throw new Error(`Failed to fetch users: ${error.message}`);
     }
 }
+
+export async function getActivity(userId: string) {
+    try {
+        connectToDB();
+
+       /* const user = await User.findOne({ id: userId });
+
+        if(!user) {
+            throw new Error("User not found");
+        } */
+//find all threads created by user
+        const userThreads = await Thread.find({ author: userId });
+
+        //collect all child thread ids (replies) from the children field
+
+       // childThreadIds will be an array containing all the children thread IDs from each userThreads element in the userThreads array.
+
+
+       // example : 
+
+     /*  const userThreads = [
+        { id: 'thread1', children: ['child1', 'child2'] },
+        { id: 'thread2', children: ['child3'] },
+        { id: 'thread3', children: ['child4', 'child5', 'child6'] }
+      ];
+
+      ["child1", "child2", "child3", "child4", "child5", "child6"]
+*/
+      
+
+        const childThreadIds = userThreads.reduce((acc, userThreads) => {
+            return acc.concat(userThreads.children);
+        },[])
+
+        const replies = await Thread.find({ 
+            _id: { $in: childThreadIds },
+            author: { $ne: userId }
+        })
+        .populate({
+            path: 'author',
+            model: User,
+            select: 'name image _id'
+        });
+        
+
+        return replies;
+    } catch (error: any) {
+        throw new Error(`Failed to fetch activity: ${error.message}`);
+    }
+}
